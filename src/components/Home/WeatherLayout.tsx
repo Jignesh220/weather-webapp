@@ -24,20 +24,31 @@ export default function WeatherLayout() {
     uv: "",
     air_quality: "",
     weather_condition: "",
-    last_updated:'',
+    last_updated: "",
+    icon: "",
   });
+  const [iPath, setiPath] = React.useState("");
+  function ReverseString(str: string) {
+    const reverse = str.split("").reverse().join("");
+    const extractPath = reverse.slice(0, 7);
+    setiPath(extractPath.split("").reverse().join(""));
+    console.log(extractPath.split("").reverse().join(""));
+  }
   React.useEffect(() => {
     if (Day === "") {
       getDateData();
     }
   }, [Day]);
   React.useEffect(() => {
+    ReverseString(CurrentLocation.icon);
+  }, [iPath, CurrentLocation.icon]);
+
+  React.useEffect(() => {
     LocationData();
   }, [latitude, longitude]);
 
   const getDateData = () => {
     const today = new Date();
-    console.log(today.getMonth());
     settodaysDate(today.getDate());
     switch (today.getMonth()) {
       case 0:
@@ -125,6 +136,7 @@ export default function WeatherLayout() {
               cloud: json.current.cloud,
               uv: json.current.uv,
               air_quality: json.current.air_quality.pm2_5,
+              icon: json.current.condition.icon,
             });
           });
       },
@@ -154,7 +166,9 @@ export default function WeatherLayout() {
         >
           <div className="min-w-full p-10 rounded-2xl">
             <Stack direction="column" gap={3}>
-              <div className="text-sm text-white tracking-wider">last updated: {CurrentLocation.last_updated}</div>
+              <div className="text-sm text-white tracking-wider">
+                last updated: {CurrentLocation.last_updated}
+              </div>
               <Stack direction="row" gap={1} justifyContent="start">
                 <LocationOnRoundedIcon
                   style={{
@@ -192,12 +206,26 @@ export default function WeatherLayout() {
           </div>
         </Grid>
         <Grid xs={2} sm={4} md={5}>
-          <div className="min-w-full p-5">
-            <Stack direction="row" gap={2}>
-              <div className="text-lg text-white">{latitude}</div>
-              <div className="text-lg font-bold text-white">{longitude}</div>
-            </Stack>
-          </div>
+          <center
+            className="min-w-full p-5"
+            style={{
+              backgroundColor: "#ffffff8a",
+              backdropFilter: "blur(8px)",
+              borderRadius: 20,
+            }}
+          >
+            <img
+              src={`https://firebasestorage.googleapis.com/v0/b/clime-forecast.appspot.com/o/weather%2F${iPath}?alt=media`}
+              alt="icon_image"
+              width={400}
+              className="mx-3"
+            />
+            <div className="text-center text-3xl">
+              <div className="text-blue-800 font-bold font-manjari tracking-wide">
+                {CurrentLocation.weather_condition}
+              </div>
+            </div>
+          </center>
         </Grid>
         <Grid
           xs={2}

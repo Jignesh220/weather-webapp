@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-.font-manjari{
-    font-family: 'Manjari';
+.font-manjari {
+  font-family: "Manjari";
+}
+.center-v-h {
+  display: flex;
+  justify-content: center;
 }
