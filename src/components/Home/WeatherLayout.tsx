@@ -10,9 +10,7 @@ export default function WeatherLayout() {
   const [Day, setDay] = useState("");
   const [todaysDate, settodaysDate] = useState(0);
   const [MonthData, setMonthData] = useState("");
-  const [latitude, setLatitude] = useState<number | null>(null);
-  const [longitude, setLongitude] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [location, setlocation] = React.useState("");
   const [CurrentLocation, setCurrentLocation] = useState({
     city: "",
     mainCity: "",
@@ -32,7 +30,6 @@ export default function WeatherLayout() {
     const reverse = str.split("").reverse().join("");
     const extractPath = reverse.slice(0, 7);
     setiPath(extractPath.split("").reverse().join(""));
-    console.log(extractPath.split("").reverse().join(""));
   }
   React.useEffect(() => {
     if (Day === "") {
@@ -44,8 +41,8 @@ export default function WeatherLayout() {
   }, [iPath, CurrentLocation.icon]);
 
   React.useEffect(() => {
-    LocationData();
-  }, [latitude, longitude]);
+      getWeatherHourlyDataBySearch();
+  }, [location]);
 
   const getDateData = () => {
     const today = new Date();
@@ -113,37 +110,31 @@ export default function WeatherLayout() {
         setDay("Saturday");
     }
   };
-  const LocationData = () => {
-    navigator.geolocation.getCurrentPosition(
-      (position: GeolocationPosition) => {
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
-        fetch(
-          `https://api.weatherapi.com/v1/current.json?key=${process.env.GATSBY_API_KEY}&q=${position.coords.latitude},${position.coords.longitude}&aqi=yes`
-        )
-          .then((res) => res.json())
-          .then((json) => {
-            setCurrentLocation({
-              ...CurrentLocation,
-              city: json.location.name,
-              mainCity: json.location.region,
-              weather_condition: json.current.condition.text,
-              last_updated: json.current.last_updated,
-              wind_kph: json.current.wind_kph,
-              temp_c: json.current.temp_c,
-              pressure_mb: json.current.pressure_mb,
-              humidity: json.current.humidity,
-              cloud: json.current.cloud,
-              uv: json.current.uv,
-              air_quality: json.current.air_quality.pm2_5,
-              icon: json.current.condition.icon,
-            });
-          });
-      },
-      (error: GeolocationPositionError) => {
-        setError(error.message);
-      }
-    );
+
+  const getWeatherHourlyDataBySearch = () => {
+    fetch(
+      `https://api.weatherapi.com/v1/current.json?key=${
+        process.env.GATSBY_API_KEY
+      }&q=${window.location.search.slice(3)}&aqi=yes`
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        setCurrentLocation({
+          ...CurrentLocation,
+          city: json.location.name,
+          mainCity: json.location.region,
+          weather_condition: json.current.condition.text,
+          last_updated: json.current.last_updated,
+          wind_kph: json.current.wind_kph,
+          temp_c: json.current.temp_c,
+          pressure_mb: json.current.pressure_mb,
+          humidity: json.current.humidity,
+          cloud: json.current.cloud,
+          uv: json.current.uv,
+          air_quality: json.current.air_quality.pm2_5,
+          icon: json.current.condition.icon,
+        });
+      });
   };
 
   return (

@@ -16,7 +16,7 @@ export default function Searchbar() {
   return (
     <div className="mb-12">
       <div>
-        <form onSubmit={handleSubmit}>
+        <form action="">
           <center>
             <Stack direction="row" gap={1} justifyContent="center">
               <Autocomplete

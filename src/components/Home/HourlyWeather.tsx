@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Stack, Grid } from "@mui/joy";
 import { StaticImage } from "gatsby-plugin-image";
+import axios from "axios";
 
 type HourlyWeatherDataType = {
   temp_c: number;
@@ -11,34 +12,25 @@ type HourlyWeatherDataType = {
 };
 
 export default function HourlyWeather() {
-  const [latitude, setLatitude] = useState<number | null>(null);
-  const [longitude, setLongitude] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [hourlyWeatherData, setHourlyWeatherData] = useState<
     HourlyWeatherDataType[]
   >([]);
+  const [location, setlocation] = React.useState("");
 
   useEffect(() => {
-    getWeatherHourlyData();
-  }, [latitude, longitude, error]);
+      getWeatherHourlyDataBySearch();
+  }, [location]);
 
-  const getWeatherHourlyData = (): void => {
-    navigator.geolocation.getCurrentPosition(
-      (position: GeolocationPosition) => {
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
-        fetch(
-          `https://api.weatherapi.com/v1/forecast.json?key=${process.env.GATSBY_API_KEY}&q=${position.coords.latitude},${position.coords.longitude}&aqi=yes`
-        )
-          .then((res) => res.json())
-          .then((json) => {
-            setHourlyWeatherData(json.forecast.forecastday[0].hour);
-          });
-      },
-      (error: GeolocationPositionError) => {
-        setError(error.message);
-      }
-    );
+  const getWeatherHourlyDataBySearch = () => {
+    fetch(
+      `https://api.weatherapi.com/v1/forecast.json?key=${
+        process.env.GATSBY_API_KEY
+      }&q=${window.location.search.slice(3)}&aqi=yes`
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        setHourlyWeatherData(json.forecast.forecastday[0].hour);
+      });
   };
 
   return (
