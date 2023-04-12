@@ -18,24 +18,28 @@ export default function HourlyWeather() {
   const [location, setlocation] = React.useState("");
 
   useEffect(() => {
-      getWeatherHourlyDataBySearch();
+    getWeatherHourlyDataBySearch();
+    console.log(window.location.search);
+    setlocation(window.location.search)
   }, [location]);
 
   const getWeatherHourlyDataBySearch = () => {
-    fetch(
-      `https://api.weatherapi.com/v1/forecast.json?key=${
-        process.env.GATSBY_API_KEY
-      }&q=${window.location.search.slice(3)}&aqi=yes`
-    )
-      .then((res) => res.json())
-      .then((json) => {
-        setHourlyWeatherData(json.forecast.forecastday[0].hour);
-      });
+    if (window.location.search) {
+      fetch(
+        `https://api.weatherapi.com/v1/forecast.json?key=${
+          process.env.GATSBY_API_KEY
+        }&q=${window.location.search.slice(3)}&aqi=yes`
+      )
+        .then((res) => res.json())
+        .then((json) => {
+          setHourlyWeatherData(json.forecast.forecastday[0].hour);
+        });
+    }
   };
 
   return (
     <div className="mt-12 px-28">
-      <Grid container columns={{ xs: 4, sm: 8, md: 12 }} sx={{ flexGrow: 1 }}>
+      <Grid container columns={{ xs: 12, sm: 12, md: 12 }} sx={{ flexGrow: 1 }}>
         {hourlyWeatherData.map((data: HourlyWeatherDataType) => (
           <OneHourData
             key={data.time}
@@ -70,7 +74,7 @@ const OneHourData = ({
 
   return (
     <Grid
-      xs={2}
+      xs={6}
       sm={4}
       md={1.5}
       sx={{

@@ -3,8 +3,11 @@ require("dotenv").config()
 
 const config: GatsbyConfig = {
   siteMetadata: {
-    title: `weather-webapp`,
-    siteUrl: `https://www.yourdomain.tld`,
+    title: `Clime forcast`,
+    siteUrl: `https://clime-forecast.web.app`,
+    description: `Weather app`,
+    twitterUsername: `@gatsbyjs`,
+    image: `./src/images/icon.png`,
   },
   // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
   // If you use VSCode you can also use the GraphQL plugin
@@ -17,11 +20,20 @@ const config: GatsbyConfig = {
       resolve: "gatsby-plugin-manifest",
       options: {
         icon: "src/images/icon.png",
+        name: `Clime forecast`,
+        short_name: `Clime Forecast`,
+        description: `Weather Forecasr webapp`,
+        lang: `en`,
+        start_url: `/`,
+        background_color: `#f7f0eb`,
+        theme_color: `#a2466c`,
+        display: `standalone`,
       },
     },
     "gatsby-plugin-mdx",
     "gatsby-plugin-postcss",
     "gatsby-plugin-sharp",
+    "gatsby-plugin-no-sourcemaps",
     "gatsby-transformer-sharp",
     {
       resolve: "gatsby-source-filesystem",

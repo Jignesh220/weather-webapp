@@ -18,7 +18,9 @@ export default function Searchbar() {
       <div>
         <form action="">
           <center>
-            <Stack direction="row" gap={1} justifyContent="center">
+            <Stack direction="row" gap={1} justifyContent="center" sx={{
+              marginTop: {xs: 5, md: 'auto'}
+            }}>
               <Autocomplete
                 options={cityName}
                 name="s"
@@ -28,7 +30,7 @@ export default function Searchbar() {
                   setform(option?.name ?? '')
                 }}
                 sx={{
-                  minWidth: 800,
+                  minWidth: {lg:800,xs:'auto'},
                   border: "none",
                   borderRadius: 58,
                   paddingX: 2.5,

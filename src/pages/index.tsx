@@ -9,3 +9,9 @@ export default function index() {
     </div>
   )
 }
+
+export const Head = () => {
+  return <div>
+  <title>Clime Forecast | Loading...</title>
+  </div>
+}

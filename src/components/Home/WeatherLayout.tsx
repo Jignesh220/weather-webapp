@@ -41,7 +41,10 @@ export default function WeatherLayout() {
   }, [iPath, CurrentLocation.icon]);
 
   React.useEffect(() => {
-      getWeatherHourlyDataBySearch();
+    getWeatherHourlyDataBySearch();
+    console.log(window.location.search);
+    
+    setlocation(window.location.search)
   }, [location]);
 
   const getDateData = () => {
@@ -112,29 +115,31 @@ export default function WeatherLayout() {
   };
 
   const getWeatherHourlyDataBySearch = () => {
-    fetch(
-      `https://api.weatherapi.com/v1/current.json?key=${
-        process.env.GATSBY_API_KEY
-      }&q=${window.location.search.slice(3)}&aqi=yes`
-    )
-      .then((res) => res.json())
-      .then((json) => {
-        setCurrentLocation({
-          ...CurrentLocation,
-          city: json.location.name,
-          mainCity: json.location.region,
-          weather_condition: json.current.condition.text,
-          last_updated: json.current.last_updated,
-          wind_kph: json.current.wind_kph,
-          temp_c: json.current.temp_c,
-          pressure_mb: json.current.pressure_mb,
-          humidity: json.current.humidity,
-          cloud: json.current.cloud,
-          uv: json.current.uv,
-          air_quality: json.current.air_quality.pm2_5,
-          icon: json.current.condition.icon,
+    if (window.location.search) {
+      fetch(
+        `https://api.weatherapi.com/v1/current.json?key=${
+          process.env.GATSBY_API_KEY
+        }&q=${window.location.search.slice(3)}&aqi=yes`
+      )
+        .then((res) => res.json())
+        .then((json) => {
+          setCurrentLocation({
+            ...CurrentLocation,
+            city: json.location.name,
+            mainCity: json.location.region,
+            weather_condition: json.current.condition.text,
+            last_updated: json.current.last_updated,
+            wind_kph: json.current.wind_kph,
+            temp_c: json.current.temp_c,
+            pressure_mb: json.current.pressure_mb,
+            humidity: json.current.humidity,
+            cloud: json.current.cloud,
+            uv: json.current.uv,
+            air_quality: json.current.air_quality.pm2_5,
+            icon: json.current.condition.icon,
+          });
         });
-      });
+    }
   };
 
   return (
@@ -142,13 +147,16 @@ export default function WeatherLayout() {
       <Grid
         container
         spacing={{ xs: 2, md: 3 }}
-        columns={{ xs: 4, sm: 8, md: 12 }}
+        columnSpacing={3}
+        columns={{ xs: 4, sm: 8, md: 12 ,lg: 12}}
         sx={{ flexGrow: 1 }}
+        justifyContent="center"
       >
         <Grid
-          xs={2}
-          sm={4}
-          md={3.5}
+          xs={6}
+          sm={12}
+          md={6}
+          lg={3.5}
           sx={{
             backgroundColor: "#ffffff4a",
             backdropFilter: "blur(5px)",
@@ -196,7 +204,8 @@ export default function WeatherLayout() {
             </Stack>
           </div>
         </Grid>
-        <Grid xs={2} sm={4} md={5}>
+        <Grid xs={6} sm={12} md={6}
+          lg={5}>
           <center
             className="min-w-full p-5"
             style={{
@@ -219,9 +228,10 @@ export default function WeatherLayout() {
           </center>
         </Grid>
         <Grid
-          xs={2}
-          sm={4}
-          md={3.5}
+          xs={6}
+          sm={12}
+          md={6}
+          lg={3.5}
           sx={{
             backgroundColor: "#ffffff4a",
             backdropFilter: "blur(5px)",
